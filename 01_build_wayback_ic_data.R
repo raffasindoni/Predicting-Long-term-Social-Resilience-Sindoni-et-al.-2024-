@@ -43,10 +43,10 @@ options(scipen=999)
 #Details could only be pulled when wayback scraped a community's detailed page
 
 #This is a collection of IC with all of their full details (part 1 of WayBack Scrape)
-full_ic_part1 <- read_csv("/Users/raffaelesindoni/Library/Mobile Documents/com~apple~CloudDocs/yale_PHD/doctoral_research/community/data/raw/Krut_ic_wayback_scrape_part_1_final.csv")
+full_ic_part1 <- read_csv("###POINT TO WAYBACK PART 1 RAW DATA")
 
-#This is a collection of IC with all of their full details from roughly 2017 to 2024
-full_ic_part2  <- read_csv("/Users/raffaelesindoni/Library/Mobile Documents/com~apple~CloudDocs/yale_PHD/doctoral_research/community/data/raw/Krut_ic_wayback_scrape_part_2_final.csv")
+#This is a collection of IC with all of their full details (part 2 of WayBack Scrape)
+full_ic_part2  <- read_csv("###POINT TO WAYBACK PART 2 RAW DATA")
 
 ######## 
 ######## Section A
@@ -389,7 +389,7 @@ combined_04_24 <- rbind(selected_full_part1,
 
 #write to build
 
-write_csv(combined_04_24, "/Users/raffaelesindoni/Library/Mobile Documents/com~apple~CloudDocs/yale_PHD/doctoral_research/community/data/built/A_wayback_build.csv")
+write_csv(combined_04_24, "OUTPUT_PATH_HERE/data/built/A_wayback_build.csv")
 
 
 

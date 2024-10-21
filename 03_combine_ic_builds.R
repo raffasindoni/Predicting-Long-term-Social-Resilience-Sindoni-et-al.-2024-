@@ -1,13 +1,3 @@
-
-######### CODE OVERVIEW
-
-# Script ID = 004
-# Code Author = Raffa Sindoni, PhD Candidate '28 Yale University (raffaele.sindoni@yale.edu)
-# PROJECT = IC Analysis
-# Co-Authors = Farrell, Herring
-
-# Overview = Prepare IC Scrape of 2024 (Present) For Analysis
-
 rm(list = ls(all.names = TRUE)) 
 
 # Install Packges and fetch library -----------------------------------------------------
@@ -42,15 +32,12 @@ library(dplyr)
 
 options(scipen=999)
 
-# Set up your Census API key
-#census_api_key("64ee452f6c75e8fa2bcfa61cf7511c22833bb907", install = TRUE, overwrite = TRUE)
-
 ######
 ######## SECTION 0 - Read in Datasets
 
-wayback_ic_data <- read_csv("/Users/raffaelesindoni/Library/Mobile Documents/com~apple~CloudDocs/yale_PHD/doctoral_research/community/data/built/A_wayback_build.csv")
+wayback_ic_data <- read_csv("PATH/data/built/A_wayback_build.csv")
 
-ic_2024_present <- read_csv("/Users/raffaelesindoni/Library/Mobile Documents/com~apple~CloudDocs/yale_PHD/doctoral_research/community/data/built/B_present_IC_24_build.csv")
+ic_2024_present <- read_csv("PATH/data/built/B_present_IC_24_build.csv")
 
 
 ######
@@ -59,7 +46,7 @@ combined_ic <- rbind(wayback_ic_data,
                      ic_2024_present )
 
 ######
-######## SECTION 2 - Add Varibale on Length of Existance
+######## SECTION 2 - Add Variable on Length of Existence
 
 #Group communities by together by unique id (name, city)
 #Then find out the last year that they exist in dataset
@@ -72,7 +59,7 @@ lenght_of_community_existance <- combined_ic %>%
   summarise(yr_established = max(gen_year_established),
             most_recent_scrape_date = max(yr)) %>%
   ungroup () %>%
-  #calculate yrs in existance as the date last scraped on wayback minus the year listed it was established
+  #calculate yrs in existence as the date last scraped on wayback minus the year listed it was established
   mutate(yrs_in_existance = most_recent_scrape_date - yr_established) %>%
   dplyr::select(ic_name_for_join,
          yrs_in_existance)
@@ -113,19 +100,21 @@ flag_has_units_or_housing = ifelse(!is.na(coho_number_of_residences) |
       flag_has_address = ifelse(!is.na(gen_community_address),
                                1,
                                0),
-#Flag for IC LIsted country (not geocoded)
+#Flag for IC listed country (not geocoded)
       flag_USA_listed_by_IC = ifelse(country_by_ic == "UnitedStates",
                                 1,
                                 0)) %>%
-  #clean up total membrs field 
+  #clean up total members field 
   mutate(mbrsp_total_members_cleaned = clean_members(mbrsp_total_members),
          #Flag for has members
          flag_has_four_plus_members = ifelse(mbrsp_total_members_cleaned>= 4,
                                              1,
                                              0)) %>%
   dplyr::select(-mbrsp_total_members)
+
 ######
 ######## SECTION 4 - Export TEMP for geocoding in ArcGIS
+
 # Function to find the mode
 # get_mode <- function(x) {
 #   ux <- unique(x)
@@ -144,12 +133,12 @@ flag_has_units_or_housing = ifelse(!is.na(coho_number_of_residences) |
 #   #   median_total_members = median(mbrsp_total_members_cleaned, na.rm = TRUE)
 #   ungroup()
 # 
-# write_csv(for_geocode, "/Users/raffaelesindoni/Library/Mobile Documents/com~apple~CloudDocs/yale_PHD/doctoral_research/community/data/built/temps/all_ic_for_geocode.csv")
+# write_csv(for_geocode, "PATH/data/built/temps/all_ic_for_geocode.csv")
 
 ######
 ######## SECTION 6 - Re-Inport GIS GEoCoded data 
 
-geocoded_all_ic <- read_xls("/Users/raffaelesindoni/Library/Mobile Documents/com~apple~CloudDocs/yale_PHD/doctoral_research/community/data/built/temps/B_geocoded_ic_output.xls")
+geocoded_all_ic <- read_xls("PATH/data/built/temps/B_geocoded_ic_output.xls")
   
 selected_geocoded_est_ic <- geocoded_all_ic %>% 
   rename("ic_name_for_join" = USER_ic_name_for_join,
@@ -163,9 +152,11 @@ selected_geocoded_est_ic <- geocoded_all_ic %>%
          "urban_area_code" = UA_CODE,
          "urban_area_name" = "NAME",
          "pop_of_urban_area" = POPULATION) %>%
+  #create a flag for those areas that map to census urban/metro areas
   mutate(urban_flag = ifelse(!is.na(urban_area_code),
                              1,
                              0),
+         #flag those observations that did not receive a geocoded address
          gecoded_flag  =ifelse(!is.na(geocoded_address),
                                                1,
                                                0),
@@ -187,8 +178,9 @@ selected_geocoded_est_ic <- geocoded_all_ic %>%
          geocoded_state_abrv,
          geocoded_country)
 
+
 ######
-######## SECTION 7 - Join Geocoded onto Main Dataset by Unique ID; Export for Build
+######## SECTION 7 - Join Information from Geocoded data onto data in the working data frame by Unique ID; Export for Build
 
 #join back on to dataset
 ic_build_w_geocoded <- combined_ic_w_filter_flags %>%
@@ -197,12 +189,12 @@ ic_build_w_geocoded <- combined_ic_w_filter_flags %>%
             by = join_by("ic_name_for_join"))
 
 #write to build
-write_csv(ic_build_w_geocoded, "/Users/raffaelesindoni/Library/Mobile Documents/com~apple~CloudDocs/yale_PHD/doctoral_research/community/data/built/C_all_ic_w_geocode.csv")
+write_csv(ic_build_w_geocoded, "PATH/data/built/C_all_ic_w_geocode.csv")
 
 
 ######
-######## SECTION 8 - Make build subection of each community hving only one observation
-
+######## SECTION 8 - Create an aggregated community build, so that each IC only receives ONE observation 
+#                    instead of one observation every time the commmunity was scraped
 
 # Custom function to calculate the mode excluding NA
 calculate_mode <- function(x) {
@@ -225,7 +217,7 @@ first_or_mode <- function(x) {
 aggregated_data <- ic_build_w_geocoded %>%
   group_by(ic_name_for_join) %>%
   arrange(desc(yr)) %>%
-  #Take either the most recent information listed by the IC, or its most common information
+  #Take either the most recent information listed by the IC, or its most common (mode) information across time
   dplyr::summarize(
     yr_most_recently_scraped = first_or_mode(yr),
     mission_statement = first_or_mode(mission_statement),
@@ -287,4 +279,4 @@ aggregated_data <- ic_build_w_geocoded %>%
     geocoded_country = first_or_mode(geocoded_country)
   )
 
-write_csv(aggregated_data, "/Users/raffaelesindoni/Library/Mobile Documents/com~apple~CloudDocs/yale_PHD/doctoral_research/community/data/built/aggregated_ic_data.csv")
+write_csv(aggregated_data, "PATH/data/built/aggregated_ic_data.csv")

@@ -1,14 +1,4 @@
 
-
-######### CODE OVERVIEW
-
-# Script ID = 005
-# Code Author = Raffa Sindoni, PhD Candidate '28 Yale University (raffaele.sindoni@yale.edu)
-# PROJECT = IC Analysis
-# Co-Authors = Farrell, Herring
-
-# Overview = Compelte IC regression
-
 rm(list = ls(all.names = TRUE)) 
 
 # Install Packges and fetch library -----------------------------------------------------
@@ -63,7 +53,7 @@ options(scipen=999)
 ######
 ######## SECTION 0 - Read in and Prepare Dataset
 
-filt_ab <- read_csv( "/Users/raffaelesindoni/Library/Mobile Documents/com~apple~CloudDocs/yale_PHD/doctoral_research/community/data/built/regression_build_ic.csv")
+filt_ab <- read_csv( "PATH/data/built/regression_build_ic.csv")
 
 # Prepare data for regression
 
@@ -97,7 +87,7 @@ reg_filtered <- filt_ab %>%
   ) %>% 
   #Filter to IC between 4 members and 400 members (align to literature definition of IC, and Reduce Noise)
   #Remove student communities
-  #Remove IC that have no estbalishment date
+  #Remove IC that have no establishment date
   filter(yrs_in_existance > 0, 
          DEMOG_mbrsp_total_members_cleaned >= 4 & DEMOG_mbrsp_total_members_cleaned < 400, 
          student_or_university_flag == 0) %>% 
@@ -192,7 +182,7 @@ summary(model_d4)
 
 ######
 ## Loop for Printing D1-D4 and associated Tests
-output_directory <- "/Users/raffaelesindoni/Library/Mobile Documents/com~apple~CloudDocs/yale_PHD/doctoral_research/community/exports/regressions/"
+output_directory <- "PATH/exports/regressions/"
 
 # Define function to extract model details
 extract_model_details <- function(model, model_name) {
@@ -244,7 +234,7 @@ for (details in model_details) {
 # Print the summary table
 print(summary_table)
 
-write_csv(summary_table, "/Users/raffaelesindoni/Library/Mobile Documents/com~apple~CloudDocs/yale_PHD/doctoral_research/community/exports/regressions/summary_table_d1_d4.csv"
+write_csv(summary_table, "PATH/exports/regressions/summary_table_d1_d4.csv"
 )
 
 # Install necessary packages if not already installed
@@ -448,7 +438,7 @@ ggplot(significant_vars, aes(x = estimate, y = reorder(term, estimate), color = 
   # Print the summary table
   print(summary_table)
   
-  write_csv(summary_table, "/Users/raffaelesindoni/Library/Mobile Documents/com~apple~CloudDocs/yale_PHD/doctoral_research/community/exports/regressions/summary_table_full_model.csv")
+  write_csv(summary_table, "PATH/exports/regressions/summary_table_full_model.csv")
   
   
 
@@ -584,7 +574,7 @@ library(car)
   
   #export this dataframe 
   write_csv(df_for_reg_stats, 
-            "/Users/raffaelesindoni/Library/Mobile Documents/com~apple~CloudDocs/yale_PHD/doctoral_research/community/data/built/df_of_all_IC_in_regression_model.csv")
+            "PATH/data/built/df_of_all_IC_in_regression_model.csv")
   
   
   
@@ -664,7 +654,7 @@ library(car)
   
   print(summary_stats)
   
-  write_csv(summary_stats, "/Users/raffaelesindoni/Library/Mobile Documents/com~apple~CloudDocs/yale_PHD/doctoral_research/community/exports/regressions/sum_stats_IC_in_reg_model.csv")
+  write_csv(summary_stats, "PATH/exports/regressions/sum_stats_IC_in_reg_model.csv")
   
   #### Create Bar Chart
   # Filter for indicator variables only
@@ -883,7 +873,7 @@ library(car)
   
   print(year_bucket_summary)
   
-  write_csv(year_bucket_summary, "/Users/raffaelesindoni/Library/Mobile Documents/com~apple~CloudDocs/yale_PHD/doctoral_research/community/exports/regressions/yearly_details_IC_in_reg_model.csv")
+  write_csv(year_bucket_summary, "PATH/exports/regressions/yearly_details_IC_in_reg_model.csv")
   
 
 

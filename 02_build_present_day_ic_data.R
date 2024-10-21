@@ -1,13 +1,3 @@
-
-######### CODE OVERVIEW
-
-# Script ID = 004
-# Code Author = Raffa Sindoni, PhD Candidate '28 Yale University (raffaele.sindoni@yale.edu)
-# PROJECT = IC Analysis
-# Co-Authors = Farrell, Herring
-
-# Overview = Prepare IC Scrape of 2024 (Present) For Analysis
-
 rm(list = ls(all.names = TRUE)) 
 
 # Install Packges and fetch library -----------------------------------------------------
@@ -43,9 +33,8 @@ options(scipen=999)
 #0 - #Full list of IC (with descriptions) from 2024
 
 
-#This is an exhaustive scrape of all IC
-#from Ic.org in the present day (not wayback Machine)
-ic_2024_present <- read_csv("/Users/raffaelesindoni/Library/Mobile Documents/com~apple~CloudDocs/yale_PHD/doctoral_research/community/data/raw/willis_ic_scrape_results_2024_raw.csv")
+#This is an exhaustive scrape of all IC from Ic.org in the present day (not wayback Machine)
+ic_2024_present <- read_csv("PATH_HERE/raw/2024_raw_ic_scrape_from_ICorg.csv")
 
 ######## 
 ######## Section A
@@ -139,11 +128,6 @@ extract_male_percentage <- function(text) {
   return(result)
 }
 
-# # Apply the function to the mbrsp_gender_balance varibale and store it in the cleaned_mbrsp_percent_men varibale we just created, if it has no value
-# cleaned_ic_2024_present <- cleaned_ic_2024_present %>% 
-#   mutate(cleaned_mbrsp_percent_men = if_else(is.na(cleaned_mbrsp_percent_men),
-#                                              extract_male_percentage(mbrsp_gender_balance),
-#                                              cleaned_mbrsp_percent_men))
 
 #Correct range values to the midpoint of the range 
 cleaned_ic_2024_present$cleaned_mbrsp_percent_men[cleaned_ic_2024_present$cleaned_mbrsp_percent_men == "1-10%"] <- "5%"
@@ -216,7 +200,7 @@ selected_24ic <- cleaned_ic_2024_present %>%
 
 #write to build
 
-write_csv(selected_24ic, "/Users/raffaelesindoni/Library/Mobile Documents/com~apple~CloudDocs/yale_PHD/doctoral_research/community/data/built/B_present_IC_24_build.csv")
+write_csv(selected_24ic, "PATH/data/built/B_present_IC_24_build.csv")
 
 
 

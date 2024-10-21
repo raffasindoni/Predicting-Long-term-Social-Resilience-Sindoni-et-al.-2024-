@@ -1,14 +1,3 @@
-
-
-######### CODE OVERVIEW
-
-# Script ID = 005
-# Code Author = Raffa Sindoni, PhD Candidate '28 Yale University (raffaele.sindoni@yale.edu)
-# PROJECT = IC Analysis
-# Co-Authors = Farrell, Herring
-
-# Overview = Calculate Weighted Pearson Coefficients
-
 rm(list = ls(all.names = TRUE)) 
 
 # Install Packges and fetch library -----------------------------------------------------
@@ -63,7 +52,7 @@ options(scipen=999)
 ######
 ######## SECTION 0 - Read in Datasets
 
-filt_ab <- read_csv( "/Users/raffaelesindoni/Library/Mobile Documents/com~apple~CloudDocs/yale_PHD/doctoral_research/community/data/built/regression_build_ic.csv")
+filt_ab <- read_csv( "PATH/data/built/regression_build_ic.csv")
 
 # Prepare data for Correlation Analaysis
 
@@ -130,12 +119,7 @@ reg_filtered <- filt_ab %>%
       !is.na(yrs_in_existance)
   ) 
 
- 
- 
 
-##
-#install.packages("psych")
-#library(psych)
 
 # Define the variables for the correlation matrix
 variables <- c("yrs_in_existance",
@@ -234,4 +218,4 @@ print(cor_results_alt)
 
 
 
-write_csv(cor_results_alt, "/Users/raffaelesindoni/Library/Mobile Documents/com~apple~CloudDocs/yale_PHD/doctoral_research/community/exports/regressions/pearson_coeff.csv")
+write_csv(cor_results_alt, "PATH/exports/regressions/pearson_coeff.csv")

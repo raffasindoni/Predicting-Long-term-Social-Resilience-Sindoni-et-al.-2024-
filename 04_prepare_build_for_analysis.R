@@ -1,14 +1,3 @@
-
-
-######### CODE OVERVIEW
-
-# Script ID = 004
-# Code Author = Raffa Sindoni, PhD Candidate '28 Yale University (raffaele.sindoni@yale.edu)
-# PROJECT = IC Analysis
-# Co-Authors = Farrell, Herring
-
-# Overview = Build IC regression
-
 rm(list = ls(all.names = TRUE)) 
 
 # Install Packges and fetch library -----------------------------------------------------
@@ -55,10 +44,10 @@ options(scipen=999)
 ######
 ######## SECTION 0 - Read in Datasets
 
-ag_build <- read_csv("/Users/raffaelesindoni/Library/Mobile Documents/com~apple~CloudDocs/yale_PHD/doctoral_research/community/data/built/aggregated_ic_data.csv")
+ag_build <- read_csv("PATH/data/built/aggregated_ic_data.csv")
 
 ######
-######## SECTION 8 - Add Regression Flags to Build
+######## SECTION 1 - Add Regression Flags to Build
 
 ##Filtered down to US observations w/ est year and establishment date
 filt_ab <- ag_build %>% 
@@ -205,5 +194,5 @@ filt_ab <- filt_ab %>%
   mutate(ADJUSTMENT_centered_year = yr_most_recently_scraped - mean(yr_most_recently_scraped, na.rm = TRUE))
 
 
-write_csv(filt_ab, "/Users/raffaelesindoni/Library/Mobile Documents/com~apple~CloudDocs/yale_PHD/doctoral_research/community/data/built/regression_build_ic.csv")
+write_csv(filt_ab, "PATH/data/built/regression_build_ic.csv")
 
